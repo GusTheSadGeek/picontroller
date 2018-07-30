@@ -251,9 +251,9 @@ def garage():
                                                                                           r=sensorAir.current_value,
                                                                                           w=sensorTank.current_value,
                                                                                           d=sensorDist.current_value,
-                                                                                          r0=r_valve,
-                                                                                          r1=r_airpump,
-                                                                                          r2=r_heater)
+                                                                                          r0=r_valve.current_state,
+                                                                                          r1=r_airpump.current_state,
+                                                                                          r2=r_heater.current_state)
         logger.log(l)
 
 def main():
