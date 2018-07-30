@@ -12,6 +12,7 @@ S5  = "                         FFFFFFFFFFFFFFFFFFFF   " # 12- 10:30
 S6  = "                          FFFFFFFFFFFFFFFFFFFF  " # 12:30- 11
 
 S10 = "F       F       F       F       F       F       "  # every 4 hours
+ST = "5555555555555555555555555555555555555555555555555"
 
 
 class Timer():
