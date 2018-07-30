@@ -23,13 +23,6 @@ class Relay(object):
         super(Relay, self).__init__()
         self.pin = pin
         self.name = name
-#        self.controller = None
-#        self.controller_or = None
-#        self.controller_and = None
-#        self._logger = logg.TankLog()
-#        self.avg = []
-#        self.moving_total = 0.0
-#        self.controller_state = 99
         self.current_state = Relay.UNKNOWN
         self.overridden = False
 
@@ -77,5 +70,42 @@ class Relay(object):
         self.overridden = override
         if self.current_state != Relay.OFF:
             GPIO.output(self.pin, GPIO.HIGH)
+        self.current_state = Relay.OFF
+
+class VirtualRelay(object):
+    OFF = 0
+    ON = 1
+    FOFF = 2
+    FON = 3
+    UNKNOWN = 4
+
+    def __init__(self, name="virtualrelay"):
+        super(VirtualRelay, self).__init__()
+        self.name = name
+        self.current_state = Relay.UNKNOWN
+
+    def init(self):
+        self.turn_relay_off()
+
+    def current_pos(self):
+        s = ""
+        if self.current_state == Relay.ON:
+            s = "ON"
+        if self.current_state == Relay.OFF:
+            s = "OFF"
+        return s
+
+    def toggle(self):
+        if self.current_state != Relay.ON:
+            self.turn_relay_on(True)
+            return
+        if self.current_state != Relay.OFF:
+            self.turn_relay_off(True)
+            return
+
+    def turn_relay_on(self):
+        self.current_state = Relay.ON
+
+    def turn_relay_off(self):
         self.current_state = Relay.OFF
 

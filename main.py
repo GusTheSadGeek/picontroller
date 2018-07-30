@@ -199,6 +199,8 @@ def garage():
     r_heater = relay.Relay(pin=pinList[2],name='Heater')
     r_valve = relay.Relay(pin=pinList[3],name='Valve')
 
+    r_Active = relay.VirtualRelay(name='Active')
+
     r_heater.init()
     r_airpump.init()
     r_heater2.init()
@@ -214,6 +216,7 @@ def garage():
     webserver.relays.append(r_airpump)
     webserver.relays.append(r_heater2)
     webserver.relays.append(r_valve)
+    webserver.relays.append(r_Active)
     webserver.timers.append(t_airpump)
 
     webserver.start_server()
@@ -229,16 +232,20 @@ def garage():
         sensorDist.tick()
 
         # VALVE
-        if sensorDist.current_value < 55:
-            r_valve.turn_relay_on()
-        if sensorDist.current_value > 62:
-            r_valve.turn_relay_off()
+        if r_Active.current_state == relay.Relay.ON:
+            if sensorDist.current_value < 55:
+                r_valve.turn_relay_on()
+            if sensorDist.current_value > 62:
+                r_valve.turn_relay_off()
 
-        # HEATER
-        if sensorTank.current_value > 22:
+            # HEATER
+            if sensorTank.current_value > 22:
+                r_heater.turn_relay_off()
+            if sensorTank.current_value < 21:
+                r_heater.turn_relay_on()
+        else:
             r_heater.turn_relay_off()
-        if sensorTank.current_value < 21:
-            r_heater.turn_relay_on()
+            r_valve.turn_relay_off()
 
         # AIRPUMP
         if t_airpump.on():
@@ -247,14 +254,16 @@ def garage():
             r_airpump.turn_relay_off()
 
         timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
-        l = "time:{t}\tairtemp:{r}\ttanktemp:{w}\twater:{d}\twatervalve:{r0}\tairpump:{r1}\theater1:{r2}\theater2:{r3}".format(t=timestamp,
-                                                                                          r=sensorAir.current_value,
-                                                                                          w=sensorTank.current_value,
-                                                                                          d=sensorDist.current_value,
-                                                                                          r0=r_valve.current_state,
-                                                                                          r1=r_airpump.current_state,
-                                                                                          r2=r_heater.current_state,
-                                                                                          r3=r_heater2.current_state)
+        l = "time:{t}\tairtemp:{r}\ttanktemp:{w}\twater:{d}\twatervalve:{r0}\tairpump:{r1}"+\
+            "\theater1:{r2}\theater2:{r3}\tactive:{a}".format(t=timestamp,
+                                                              r=sensorAir.current_value,
+                                                              w=sensorTank.current_value,
+                                                              d=sensorDist.current_value,
+                                                              r0=r_valve.current_state,
+                                                              r1=r_airpump.current_state,
+                                                              r2=r_heater.current_state,
+                                                              r3=r_heater2.current_state,
+                                                              a=r_Active.current_state)
         logger.log(l)
 
 def main():
