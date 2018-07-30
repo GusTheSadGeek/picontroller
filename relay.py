@@ -1,13 +1,15 @@
 #!/usr/bin/python
 
-import debug
+# import debug
+#
+#
+# if debug.RELAY_TEST == 0:
 
+import RPi.GPIO as GPIO
 
-if debug.RELAY_TEST == 0:
-    import RPi.GPIO as GPIO
-else:
-    import DUMMY_GPIO as GPIO
-    print "DEBUG RELAY"
+# else:
+#     import DUMMY_GPIO as GPIO
+#     print "DEBUG RELAY"
 
 
 class Relay(object):
