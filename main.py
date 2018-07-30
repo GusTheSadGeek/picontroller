@@ -157,9 +157,9 @@ def shrimp():
 
         # HEATER
         if sensorTank.current_value > 22.5:
-            r_fan.turn_relay_off()
+            r_heater.turn_relay_off()
         if sensorTank.current_value < 22.3:
-            r_fan.turn_relay_on()
+            r_heater.turn_relay_on()
 
         # LIGHT
         if t_lights.on():
