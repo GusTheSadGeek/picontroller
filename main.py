@@ -254,16 +254,16 @@ def garage():
             r_airpump.turn_relay_off()
 
         timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
-        l = "time:{t}\tairtemp:{r}\ttanktemp:{w}\twater:{d}\twatervalve:{r0}\tairpump:{r1}"+\
-            "\theater1:{r2}\theater2:{r3}\tactive:{a}".format(t=timestamp,
-                                                              r=sensorAir.current_value,
-                                                              w=sensorTank.current_value,
-                                                              d=sensorDist.current_value,
-                                                              r0=r_valve.current_state,
-                                                              r1=r_airpump.current_state,
-                                                              r2=r_heater.current_state,
-                                                              r3=r_heater2.current_state,
-                                                              a=r_Active.current_state)
+        l = "time:{t}\tairtemp:{r}\ttanktemp:{w}\twater:{d}\twatervalve:{r0}\tairpump:{r1}\theater1:{r2}\theater2:{r3}\tactive:{a}".\
+            format(t=timestamp,
+            r=sensorAir.current_value,
+            w=sensorTank.current_value,
+            d=sensorDist.current_value,
+            r0=r_valve.current_state,
+            r1=r_airpump.current_state,
+            r2=r_heater.current_state,
+            r3=r_heater2.current_state,
+            a=r_Active.current_state)
         logger.log(l)
 
 def main():
