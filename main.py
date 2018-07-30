@@ -28,7 +28,7 @@ def fermenter():
     while True:
         while time.time() < now:
             time.sleep(1)
-        now = time.time()+6
+        now = time.time()+60
 
         sensorAir.tick()
 
