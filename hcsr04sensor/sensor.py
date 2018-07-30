@@ -6,17 +6,12 @@ sensor and a Raspberry Pi.  Imperial and Metric measurements are available
 # Al Audet
 # MIT License
 
-import debug
 import time
 import math
 import logging
 import threading
 
-if debug.DIST_TEST == 0:
-    import RPi.GPIO as GPIO
-else:
-    import DUMMY_GPIO as GPIO
-    print "DEBUG DIST"
+import RPi.GPIO as GPIO
 
 
 class Measurement(object):
