@@ -209,6 +209,7 @@ def garage():
 
     webserver.temps.append(sensorAir)
     webserver.temps.append(sensorTank)
+    webserver.dists.append(sensorDist)
     webserver.relays.append(r_heater)
     webserver.relays.append(r_airpump)
     webserver.relays.append(r_heater2)
