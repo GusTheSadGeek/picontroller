@@ -69,6 +69,7 @@ def fishtank():
     t1.set(timer.S4,timer.S4,timer.S4,timer.S4,timer.S4,timer.S6,timer.S6)
 
     webserver.temps.append(sensorAir)
+    webserver.temps.append(sensorTank)
     webserver.relays.append(r0)
     webserver.relays.append(r1)
     webserver.timers.append(t0)
