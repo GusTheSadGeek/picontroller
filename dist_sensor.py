@@ -2,9 +2,9 @@
 
 import hcsr04sensor.sensor as sensor
 import time
-import tank
 
-class DistSensor(tank.Ticker):
+
+class DistSensor(object):
     def __init__(self,  tempsensor, echo_pin, trig_pin, tank_depth=80, name="distance"):
         super(DistSensor, self).__init__()
         self.name = name
