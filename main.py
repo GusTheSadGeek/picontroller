@@ -229,7 +229,7 @@ def garage():
         sensorDist.tick()
 
         # VALVE
-        if sensorDist.current_value < 60:
+        if sensorDist.current_value < 55:
             r_valve.turn_relay_on()
         if sensorDist.current_value > 62:
             r_valve.turn_relay_off()
