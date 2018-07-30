@@ -36,7 +36,7 @@ class Timer():
         new_state = self.calc_state()
         if new_state != self.current:
             self.next_change = self.calc_next_change()
-        self.current = new_state
+            self.current = new_state
         return self.current
 
     def calc_next_change(self):
@@ -48,7 +48,9 @@ class Timer():
                 return "{h:02}:{m:02}".format(h=now.hour, m=now.minute)
         return "??"
 
-    def calc_state(self, now=datetime.datetime.now()):
+    def calc_state(self, now=None):
+        if now is None:
+            now = datetime.datetime.now()
         index = now.weekday() # return 0 - 7 (0=monday)
         s = self.schedule[index]
         m = now.minute % 30
