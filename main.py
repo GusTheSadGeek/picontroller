@@ -205,6 +205,7 @@ def garage():
     r_airpump.init()
     r_heater2.init()
     r_valve.init()
+    r_Active.init()
 
     t_airpump = timer.Timer("Airpump")
     t_airpump.set(timer.S10,timer.S10,timer.S10,timer.S10,timer.S10,timer.S10,timer.S10)
