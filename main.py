@@ -44,7 +44,7 @@ def fermenter():
 
         timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
 
-        l = "{t}\ttemp:{r}\trelay:{r0}".format(t=timestamp, r=sensorAir.current_value,
+        l = "time:{t}\ttemp:{r}\trelay:{r0}".format(t=timestamp, r=sensorAir.current_value,
                                                             r0=r0.current_state)
 
         logger.log(l)
@@ -97,7 +97,7 @@ def fishtank():
 
         timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
 
-        l = "{t}\troom:{r}\ttank:{w}\tlight0:{r0}\tline1:{r1}".format(t=timestamp,
+        l = "time:{t}\troom:{r}\ttank:{w}\tlight0:{r0}\tline1:{r1}".format(t=timestamp,
                                                                       r=sensorAir.current_value,
                                                                       w=sensorTank.current_value,
                                                                       r0=r0.current_state,
@@ -171,7 +171,7 @@ def shrimp():
 
         timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
 
-        l = "{t}\troom:{r}\ttank:{w}\tlight:{r0}\tfan:{r1}\theater:{r2}\txmas:{r3}".format(t=timestamp,
+        l = "time:{t}\troom:{r}\ttank:{w}\tlight:{r0}\tfan:{r1}\theater:{r2}\txmas:{r3}".format(t=timestamp,
                                                                                           r=sensorAir.current_value,
                                                                                           w=sensorTank.current_value,
                                                                                           r0=r_light.current_state,
@@ -186,7 +186,7 @@ def garage():
     logger = log.RotatingFile("/var/log/picontroller/logs")
 
     timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
-    l = "{t}\troom:{r}\ttank:{w}\tlight:{r0}\tfan:{r1}\theater:{r2}\txmas:{r3}".format(t=timestamp)
+    l = "time:{t}\troom:{r}\ttank:{w}\tlight:{r0}\tfan:{r1}\theater:{r2}\txmas:{r3}".format(t=timestamp)
 
     logger.log(l)
 
