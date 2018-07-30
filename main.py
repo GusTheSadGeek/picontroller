@@ -125,8 +125,8 @@ def shrimp():
 
     t_lights = timer.Timer("Lights")
     t_lights.set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
-    t_xmas = timer
-    t_xmas.Timer("XMAS").set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
+    t_xmas = timer.Timer("XMAS")
+    t_xmas.set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
 
     webserver.temps.append(sensorAir)
     webserver.temps.append(sensorTank)
