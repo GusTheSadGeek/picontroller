@@ -13,6 +13,7 @@ S6  = "                          FFFFFFFFFFFFFFFFFFFF  " # 12:30- 11
 
 S10 = "F       F       F       F       F       F       "  # every 4 hours
 ST = "5555555555555555555555555555555555555555555555555"
+SX = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 
 class Timer():
@@ -34,10 +35,10 @@ class Timer():
     def state(self):
         if self.schedule is None:
             return "No schedule"
-        new_state = self.calc_state()
-        if new_state != self.current:
+        old_state = self.current
+        self.current = self.calc_state()
+        if old_state != self.current:
             self.next_change = self.calc_next_change()
-        self.current = new_state
         return self.current
 
     def calc_next_change(self):
@@ -75,3 +76,14 @@ class Timer():
         return False
 
 
+def main():
+    t = Timer()
+    t.set(ST,ST,ST,ST,ST,ST,ST)
+#    t.set(SX,SX,SX,SX,SX,SX,SX)
+    t.current = not t.current
+    t.on()
+    print t.next_change
+    return 1
+
+if __name__ == '__main__':
+    main()
