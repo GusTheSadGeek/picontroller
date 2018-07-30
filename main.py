@@ -86,8 +86,7 @@ def fishtank():
 
         sensorAir.tick()
         sensorTank.tick()
-        t0.tick()
-        t1.tick()
+
 
         if t0.on():
             r0.turn_relay_on()
@@ -150,8 +149,7 @@ def shrimp():
 
         sensorAir.tick()
         sensorTank.tick()
-        t_lights.tick()
-        t_xmas.tick()
+
 
         # FAN
         if sensorTank.current_value > 22.8:
@@ -235,7 +233,6 @@ def garage():
         sensorAir.tick()
         sensorTank.tick()
         sensorDist.tick()
-        t_airpump.tick()
 
         # VALVE
         if r_Active.current_state == relay.Relay.ON:
