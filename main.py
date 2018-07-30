@@ -6,9 +6,11 @@ import time
 import relay
 import sys
 import timer
-
+import log
 
 def fermenter():
+    logger = log.RotatingFile("/var/log/picontroller/logs")
+
     sensorAir = temp_sensor.TempSensor.new(sensor='/sys/bus/w1/devices/28-041501b016ff/w1_slave')
 
     pinList = [33,35,37]
@@ -20,7 +22,7 @@ def fermenter():
     while True:
         while time.time() < now:
             time.sleep(1)
-        now = time.time()+60
+        now = time.time()+6
 
         sensorAir.tick()
 
@@ -40,16 +42,12 @@ def fermenter():
         l = "{t}\ttemp:{r}\trelay:{r0}".format(t=timestamp, r=sensorAir.current_value,
                                                             r0=r0.current_state)
 
-        log_fname = r'/var/log/picontroller/log'
-        try:
-            with open(log_fname, 'a') as f:
-                f.write("{log}\n".format(log=l))
-        except IOError as e:
-            print str(e)
-            print "Error writing to temp file {f}".format(log_fname)
+        logger.log(l)
 
 
 def fishtank():
+    logger = log.RotatingFile("/var/log/picontroller/logs")
+
     sensorAir = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-0014117fb1ff/w1_slave")
     sensorTank = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-00000676eb5f/w1_slave")
 
@@ -91,19 +89,13 @@ def fishtank():
                                                                       r0=r0.current_state,
                                                                       r1=r1.current_state)
 
-        log_fname = r'/var/log/picontroller/log'
-        try:
-            with open(log_fname, 'a') as f:
-                f.write("{log}\n".format(log=l))
-        except IOError as e:
-            print str(e)
-            print "Error writing to temp file {f}".format(log_fname)
+        logger.log(l)
 
 def shrimp():
+    logger = log.RotatingFile("/var/log/picontroller/logs")
+
     sensorAir = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-0315019a7bff/w1_slave")
     sensorTank = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-041501af2dff/w1_slave")
-
-
 
     pinList = [31,33,35,37]
     r_heater = relay.Relay(pinList[0])
@@ -162,17 +154,16 @@ def shrimp():
                                                                                           r2=r_heater.current_state,
                                                                                           r3=r_xmas.current_state)
 
-        log_fname = r'/var/log/picontroller/log'
-        try:
-            with open(log_fname, 'a') as f:
-                f.write("{log}\n".format(log=l))
-        except IOError as e:
-            print str(e)
-            print "Error writing to temp file {f}".format(log_fname)
+        logger.log(l)
 
 
 def garage():
-    pass
+    logger = log.RotatingFile("/var/log/picontroller/logs")
+
+    timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
+    l = "{t}\troom:{r}\ttank:{w}\tlight:{r0}\tfan:{r1}\theater:{r2}\txmas:{r3}".format(t=timestamp)
+
+    logger.log(l)
 
 def main():
     if len(sys.argv) > 1:
@@ -191,7 +182,6 @@ def main():
             garage()
 
     return 1
-
 
 if __name__ == '__main__':
     main()
