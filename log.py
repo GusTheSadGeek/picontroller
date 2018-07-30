@@ -42,7 +42,6 @@ class RotatingFile():
 
         oldf = os.path.join(self.log_dir, self.file_name,)
         newf = os.path.join(self.log_dir, self.file_name + "1")
-        print oldf,newf
         if os.path.isfile(oldf):
             os.rename(oldf, newf)
         os.system("touch " + self.path)
