@@ -32,23 +32,20 @@ class DistSensor(object):
              self._next_read_time = self.time_next_action()
 
     def _get_distance(self):
-        if debug.DIST_TEST != 0:
-            self._current_dist = self.test_dist()
-        else:
-            round_to = 1
-            temperature = self._tempsensor.current_value
-            self._error_count = 0
-            value = sensor.Measurement(self.trig_pin, self.echo_pin, temperature, 'metric', round_to)
-            raw_distance = value.raw_distance()
+        round_to = 1
+        temperature = self._tempsensor.current_value
+        self._error_count = 0
+        value = sensor.Measurement(self.trig_pin, self.echo_pin, temperature, 'metric', round_to)
+        raw_distance = value.raw_distance()
 
-            # If tank depth is defined then give a water depth
-            if self.tank_depth is not None:
-                water_depth = value.depth_metric(raw_distance, self.tank_depth)
-                if water_depth < 0:
-                    water_depth = 0.0
-                self._current_dist = water_depth
-            else:
-                # otherwise give a distance to water surface
-                self._current_dist = raw_distance
-            # logging.info("{x}".format(x=self._current_dist))
+        # If tank depth is defined then give a water depth
+        if self.tank_depth is not None:
+            water_depth = value.depth_metric(raw_distance, self.tank_depth)
+            if water_depth < 0:
+                water_depth = 0.0
+            self._current_dist = water_depth
+        else:
+            # otherwise give a distance to water surface
+            self._current_dist = raw_distance
+        # logging.info("{x}".format(x=self._current_dist))
 
