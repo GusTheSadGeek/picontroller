@@ -82,30 +82,30 @@ class VirtualRelay(object):
     def __init__(self, name="virtualrelay"):
         super(VirtualRelay, self).__init__()
         self.name = name
-        self.current_state = Relay.UNKNOWN
+        self.current_state = VirtualRelay.UNKNOWN
 
     def init(self):
         self.turn_relay_off()
 
     def current_pos(self):
         s = ""
-        if self.current_state == Relay.ON:
+        if self.current_state == VirtualRelay.ON:
             s = "ON"
-        if self.current_state == Relay.OFF:
+        if self.current_state == VirtualRelay.OFF:
             s = "OFF"
         return s
 
     def toggle(self):
-        if self.current_state != Relay.ON:
-            self.turn_relay_on(True)
+        if self.current_state != VirtualRelay.ON:
+            self.turn_relay_on()
             return
-        if self.current_state != Relay.OFF:
-            self.turn_relay_off(True)
+        if self.current_state != VirtualRelay.OFF:
+            self.turn_relay_off()
             return
 
     def turn_relay_on(self):
-        self.current_state = Relay.ON
+        self.current_state = VirtualRelay.ON
 
     def turn_relay_off(self):
-        self.current_state = Relay.OFF
+        self.current_state = VirtualRelay.OFF
 
