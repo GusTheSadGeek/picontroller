@@ -2,6 +2,7 @@
 
 import datetime
 import temp_sensor
+import dist_sensor
 import time
 import relay
 import sys
@@ -188,10 +189,71 @@ def shrimp():
 def garage():
     logger = log.RotatingFile("/var/log/picontroller/logs")
 
-    timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
-    l = "time:{t}\troom:{r}\ttank:{w}\tlight:{r0}\tfan:{r1}\theater:{r2}\txmas:{r3}".format(t=timestamp)
+    sensorAir = temp_sensor.TempSensor.new(name='Room', sensor="/sys/bus/w1/devices/28-041501b3a6ff/w1_slave")
+    sensorTank = temp_sensor.TempSensor.new(name='Tank', sensor="/sys/bus/w1/devices/28-041501ad96ff/w1_slave")
+    sensorDist = dist_sensor.DistSensor.new(sensorTank, echo_pin=13,trig_pin=11, tank_depth=82, name="dist")
 
-    logger.log(l)
+    pinList = [31,33,35,37]
+    r_airpump = relay.Relay(pin=pinList[0],name='Airpump')
+    r_heater2 = relay.Relay(pin=pinList[1],name='Heater2')
+    r_heater = relay.Relay(pin=pinList[2],name='Heater')
+    r_valve = relay.Relay(pin=pinList[3],name='Valve')
+
+    r_heater.init()
+    r_airpump.init()
+    r_heater2.init()
+    r_valve.init()
+
+    t_airpump = timer.Timer("Airpump")
+    t_airpump.set(timer.S10,timer.S10,timer.S10,timer.S10,timer.S10,timer.S10,timer.S10)
+
+    webserver.temps.append(sensorAir)
+    webserver.temps.append(sensorTank)
+    webserver.relays.append(r_heater)
+    webserver.relays.append(r_airpump)
+    webserver.relays.append(r_heater2)
+    webserver.relays.append(r_valve)
+    webserver.timers.append(t_airpump)
+
+    webserver.start_server()
+
+    now = 0
+    while True:
+        while time.time() < now:
+            time.sleep(1)
+        now = time.time()+60
+
+        sensorAir.tick()
+        sensorTank.tick()
+        sensorDist.tick()
+
+        # VALVE
+        if sensorDist.current_value < 60:
+            r_valve.turn_relay_on()
+        if sensorDist.current_value > 62:
+            r_valve.turn_relay_off()
+
+        # HEATER
+        if sensorTank.current_value > 22:
+            r_heater.turn_relay_off()
+        if sensorTank.current_value < 21:
+            r_heater.turn_relay_on()
+
+        # AIRPUMP
+        if t_airpump.on():
+            r_airpump.turn_relay_on()
+        else:
+            r_airpump.turn_relay_off()
+
+        timestamp = datetime.datetime.utcnow().isoformat('T')+"000Z"
+        l = "time:{t}\tair:{r}\ttank:{w}\tlevel:{d}\tvalve:{r0}\tairpump:{r1}\theater:{r2}\t".format(t=timestamp,
+                                                                                          r=sensorAir.current_value,
+                                                                                          w=sensorTank.current_value,
+                                                                                          d=sensorDist.current_value,
+                                                                                          r0=r_valve,
+                                                                                          r1=r_airpump,
+                                                                                          r2=r_heater)
+        logger.log(l)
 
 def main():
     if len(sys.argv) > 1:
