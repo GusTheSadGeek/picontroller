@@ -2,7 +2,7 @@
 
 import hcsr04sensor.sensor as sensor
 import time
-
+import datetime
 
 class DistSensor(object):
     def __init__(self,  tempsensor, echo_pin, trig_pin, tank_depth=80, name="distance"):
@@ -29,7 +29,7 @@ class DistSensor(object):
          now = time.time()
          if now >= self._next_read_time:
              self._get_distance()
-             self._next_read_time = self.time_next_action()
+             self._next_read_time += now + 60
 
     def _get_distance(self):
         round_to = 1
