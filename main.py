@@ -63,8 +63,10 @@ def fishtank():
     r0.init()
     r1.init()
 
-    t0 = timer.Timer('Light1').set(timer.S3,timer.S3,timer.S3,timer.S3,timer.S3,timer.S5,timer.S5)
-    t1 = timer.Timer('Light2').set(timer.S4,timer.S4,timer.S4,timer.S4,timer.S4,timer.S6,timer.S6)
+    t0 = timer.Timer('Light1')
+    t0.set(timer.S3,timer.S3,timer.S3,timer.S3,timer.S3,timer.S5,timer.S5)
+    t1 = timer.Timer('Light2')
+    t1.set(timer.S4,timer.S4,timer.S4,timer.S4,timer.S4,timer.S6,timer.S6)
 
     webserver.temps.append(sensorAir)
     webserver.relays.append(r0)
@@ -73,8 +75,6 @@ def fishtank():
     webserver.timers.append(t1)
 
     webserver.start_server()
-
-
 
     now = 0
     while True:
@@ -122,8 +122,10 @@ def shrimp():
     r_light.init()
     r_xmas.init()
 
-    t_lights = timer.Timer("Lights").set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
-    t_xmas = timer.Timer("XMAS").set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
+    t_lights = timer.Timer("Lights")
+    t_lights.set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
+    t_xmas = timer
+    t_xmas.Timer("XMAS").set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
 
     webserver.temps.append(sensorAir)
     webserver.temps.append(sensorTank)
