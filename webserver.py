@@ -30,6 +30,11 @@ def view(ctrl=False):
         name = t.name
         line += '<br><br><font size="7">'+name+":"+str(current_value)+' C</font><br><br>'
 
+    for r in dists:
+        current_value = r.current_value
+        name = r.name
+        line += '<br><br><font size="7">'+name+":"+str(current_value)+' cm</font><br><br>'
+
     for r in relays:
         current_value = r.current_pos()
         name = r.name
@@ -37,11 +42,6 @@ def view(ctrl=False):
         if ctrl:
             toggle = '<a href="{cp}/TR?r={r}">Toggle {r}</a>'.format(cp='/otocinclus',r=name)
         line += '<br><br><font size="7">'+name+":"+str(current_value)+'</font>{tog}<br><br>'.format(tog=toggle)
-
-    for r in dists:
-        current_value = r.current_value
-        name = r.name
-        line += '<br><br><font size="7">'+name+":"+str(current_value)+' cm</font><br><br>'
 
     for r in timers:
         next_change = r.next_change

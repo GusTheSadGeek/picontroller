@@ -191,7 +191,7 @@ def garage():
 
     sensorAir = temp_sensor.TempSensor.new(name='AirTemp', sensor="/sys/bus/w1/devices/28-041501b3a6ff/w1_slave")
     sensorTank = temp_sensor.TempSensor.new(name='TankTemp', sensor="/sys/bus/w1/devices/28-041501ad96ff/w1_slave")
-    sensorDist = dist_sensor.DistSensor.new(sensorTank, echo_pin=13,trig_pin=11, tank_depth=82, name="dist")
+    sensorDist = dist_sensor.DistSensor.new(sensorTank, echo_pin=13,trig_pin=11, tank_depth=82, name="WaterLevel")
 
     pinList = [31,33,35,37]
     r_airpump = relay.Relay(pin=pinList[0],name='Airpump')
