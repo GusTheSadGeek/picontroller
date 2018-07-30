@@ -189,8 +189,8 @@ def shrimp():
 def garage():
     logger = log.RotatingFile("/var/log/picontroller/logs")
 
-    sensorAir = temp_sensor.TempSensor.new(name='Room', sensor="/sys/bus/w1/devices/28-041501b3a6ff/w1_slave")
-    sensorTank = temp_sensor.TempSensor.new(name='Tank', sensor="/sys/bus/w1/devices/28-041501ad96ff/w1_slave")
+    sensorAir = temp_sensor.TempSensor.new(name='AirTemp', sensor="/sys/bus/w1/devices/28-041501b3a6ff/w1_slave")
+    sensorTank = temp_sensor.TempSensor.new(name='TankTemp', sensor="/sys/bus/w1/devices/28-041501ad96ff/w1_slave")
     sensorDist = dist_sensor.DistSensor.new(sensorTank, echo_pin=13,trig_pin=11, tank_depth=82, name="dist")
 
     pinList = [31,33,35,37]
