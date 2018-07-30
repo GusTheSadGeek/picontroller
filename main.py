@@ -7,16 +7,21 @@ import relay
 import sys
 import timer
 import log
+import webserver
 
 def fermenter():
     logger = log.RotatingFile("/var/log/picontroller/logs")
 
-    sensorAir = temp_sensor.TempSensor.new(sensor='/sys/bus/w1/devices/28-041501b016ff/w1_slave')
+    sensorAir = temp_sensor.TempSensor.new(name='temp', sensor='/sys/bus/w1/devices/28-041501b016ff/w1_slave')
 
     pinList = [33,35,37]
     r0 = relay.Relay(pinList[0])
-
     r0.init()
+
+    webserver.temps.append(sensorAir)
+    webserver.relays.append(r0)
+
+    webserver.start_server()
 
     now = 0
     while True:
@@ -48,18 +53,27 @@ def fermenter():
 def fishtank():
     logger = log.RotatingFile("/var/log/picontroller/logs")
 
-    sensorAir = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-0014117fb1ff/w1_slave")
-    sensorTank = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-00000676eb5f/w1_slave")
+    sensorAir = temp_sensor.TempSensor.new(name="Room",sensor="/sys/bus/w1/devices/28-0014117fb1ff/w1_slave")
+    sensorTank = temp_sensor.TempSensor.new(name="Tank", sensor="/sys/bus/w1/devices/28-00000676eb5f/w1_slave")
 
     pinList = [11, 13, 15, 16]
-    r0 = relay.Relay(pinList[0])
-    r1 = relay.Relay(pinList[1])
+    r0 = relay.Relay(pin=pinList[0],name="Relay1")
+    r1 = relay.Relay(pin=pinList[1],name="Relay2")
 
     r0.init()
     r1.init()
 
-    t0 = timer.Timer().set(timer.S3,timer.S3,timer.S3,timer.S3,timer.S3,timer.S5,timer.S5)
-    t1 = timer.Timer().set(timer.S4,timer.S4,timer.S4,timer.S4,timer.S4,timer.S6,timer.S6)
+    t0 = timer.Timer('Light1').set(timer.S3,timer.S3,timer.S3,timer.S3,timer.S3,timer.S5,timer.S5)
+    t1 = timer.Timer('Light2').set(timer.S4,timer.S4,timer.S4,timer.S4,timer.S4,timer.S6,timer.S6)
+
+    webserver.temps.append(sensorAir)
+    webserver.relays.append(r0)
+    webserver.relays.append(r1)
+    webserver.timers.append(t0)
+    webserver.timers.append(t1)
+
+    webserver.start_server()
+
 
 
     now = 0
@@ -94,22 +108,33 @@ def fishtank():
 def shrimp():
     logger = log.RotatingFile("/var/log/picontroller/logs")
 
-    sensorAir = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-0315019a7bff/w1_slave")
-    sensorTank = temp_sensor.TempSensor.new(sensor="/sys/bus/w1/devices/28-041501af2dff/w1_slave")
+    sensorAir = temp_sensor.TempSensor.new(name='Room', sensor="/sys/bus/w1/devices/28-0315019a7bff/w1_slave")
+    sensorTank = temp_sensor.TempSensor.new(name='Tank', sensor="/sys/bus/w1/devices/28-041501af2dff/w1_slave")
 
     pinList = [31,33,35,37]
-    r_heater = relay.Relay(pinList[0])
-    r_fan = relay.Relay(pinList[1])
-    r_light = relay.Relay(pinList[2])
-    r_xmas = relay.Relay(pinList[3])
+    r_heater = relay.Relay(pin=pinList[0],name='Heater')
+    r_fan = relay.Relay(pin=pinList[1],name='Fan')
+    r_light = relay.Relay(pin=pinList[2],name='Light')
+    r_xmas = relay.Relay(pin=pinList[3],name='XMAS')
 
     r_heater.init()
     r_fan.init()
     r_light.init()
     r_xmas.init()
 
-    t_lights = timer.Timer().set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
-    t_xmas = timer.Timer().set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
+    t_lights = timer.Timer("Lights").set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
+    t_xmas = timer.Timer("XMAS").set(timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1,timer.S1)
+
+    webserver.temps.append(sensorAir)
+    webserver.temps.append(sensorTank)
+    webserver.relays.append(r_heater)
+    webserver.relays.append(r_fan)
+    webserver.relays.append(r_light)
+    webserver.relays.append(r_xmas)
+    webserver.timers.append(t_lights)
+    webserver.timers.append(t_xmas)
+
+    webserver.start_server()
 
     now = 0
     while True:
@@ -184,5 +209,10 @@ def main():
     return 1
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("SHUTTING DOWN")
+    finally:
+        webserver.stop_server()
 

@@ -17,9 +17,10 @@ class Relay(object):
     FON = 3
     UNKNOWN = 4
 
-    def __init__(self, pin):
+    def __init__(self, pin, name="relay"):
         super(Relay, self).__init__()
         self.pin = pin
+        self.name = name
 #        self.controller = None
 #        self.controller_or = None
 #        self.controller_and = None
@@ -28,18 +29,51 @@ class Relay(object):
 #        self.moving_total = 0.0
 #        self.controller_state = 99
         self.current_state = Relay.UNKNOWN
+        self.overridden = False
 
     def init(self):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.pin, GPIO.OUT)
         self.turn_relay_off()
 
-    def turn_relay_on(self):
+    def current_pos(self):
+        s = ""
+        if self.current_state == Relay.ON:
+            s = "ON"
+        if self.current_state == Relay.OFF:
+            s = "OFF"
+        if self.overridden:
+            s = s + " overridden"
+        return s
+
+    def toggle(self):
+        over = self.overridden
+        if self.current_state != Relay.ON:
+
+            self.turn_relay_on(True)
+            self.overridden = not over
+            return
+        if self.current_state != Relay.OFF:
+            self.turn_relay_off(True)
+            self.overridden = not over
+            return
+
+    def turn_relay_on(self, override=False):
+        if not override and self.current_state != Relay.ON and self.overridden:
+            return
+        self.overridden = override
+
+
         if self.current_state != Relay.ON:
             GPIO.output(self.pin, GPIO.LOW)
         self.current_state = Relay.ON
 
-    def turn_relay_off(self):
+    def turn_relay_off(self, override=False):
+        if not override and  self.current_state != Relay.OFF and self.overridden:
+            return
+
+        self.overridden = override
         if self.current_state != Relay.OFF:
             GPIO.output(self.pin, GPIO.HIGH)
         self.current_state = Relay.OFF
+

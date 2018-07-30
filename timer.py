@@ -14,11 +14,14 @@ S6  = "                          FFFFFFFFFFFFFFFFFFFF  " # 12:30- 11
 
 
 class Timer():
-    def __init__(self):
-        self.schedule=[S1, S1, S1, S1, S1, S2, S2]  # Mon to Sun
+    def __init__(self, name="timer"):
+        self.schedule = None
+        self.name = name
 
     def set(self, mon=S1, tue=S1, wed=S1, thu=S1, fri=S1, sat=S2, sun=S2):
         self.schedule=[mon, tue, wed, thu, fri, sat, sun]  # Mon to Sun
+        self.current = self.calc_state()
+        self.next_change = self.calc_next_change()
 
     def on(self):
         return self.state()
@@ -27,17 +30,32 @@ class Timer():
         return  not self.state()
 
     def state(self):
+        if self.schedule is None:
+            return "No schedule"
+        new_state = self.calc_state()
+        if new_state != self.current:
+            self.next_change = self.calc_next_change()
+        self.current = new_state
+        return self.current
+
+    def calc_next_change(self):
         now = datetime.datetime.now()
+        while True:
+            now += datetime.timedelta(minutes=1)
+            new_state = self.calc_state(now)
+            if new_state != self.current:
+                return "{h:02}:{m:02}".format(h=now.hour, m=now.minute)
+        return "??"
+
+    def calc_state(self, now=datetime.datetime.now()):
         index = now.weekday() # return 0 - 7 (0=monday)
         s = self.schedule[index]
         m = now.minute % 30
         z = now.hour*2 + (now.minute/30)
         q = s[z]
-        print z,q
         if q != " " and q != "0":
             try:
                 i = int(q,16)
-                print i,m
                 if m < 8:
                     return i & 1 > 0
                 if m>7 and m < 15:
@@ -51,3 +69,5 @@ class Timer():
                 return False
 
         return False
+
+
