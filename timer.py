@@ -37,7 +37,7 @@ class Timer():
         new_state = self.calc_state()
         if new_state != self.current:
             self.next_change = self.calc_next_change()
-            self.current = new_state
+        self.current = new_state
         return self.current
 
     def calc_next_change(self):
