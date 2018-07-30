@@ -39,7 +39,7 @@ def view(ctrl=False):
         line += '<br><br><font size="7">'+name+":"+str(current_value)+'</font>{tog}<br><br>'.format(tog=toggle)
 
     for r in dists:
-        current_value = r.current_pos()
+        current_value = r.current_value
         name = r.name
         line += '<br><br><font size="7">'+name+":"+str(current_value)+' cm</font><br><br>'
 
