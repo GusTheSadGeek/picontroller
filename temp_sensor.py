@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import debug
+
 import time
 
 import logging
